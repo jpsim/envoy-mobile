@@ -23,7 +23,7 @@ class EngineImpl constructor(
   ) : this(envoyEngine, envoyConfiguration, null, logLevel)
 
   init {
-    println("Envoy EngineImpl init!")
+    println("Envoy EngineImpl init2!")
     streamClient = StreamClientImpl(envoyEngine)
     pulseClient = PulseClientImpl(envoyEngine)
     if (configurationYAML != null) {
