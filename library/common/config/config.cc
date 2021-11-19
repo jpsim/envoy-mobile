@@ -30,6 +30,15 @@ const char* route_cache_reset_filter_insert = R"(
               "@type": type.googleapis.com/envoymobile.extensions.filters.http.route_cache_reset.RouteCacheReset
 )";
 
+const char* android_dns_resolver_template = R"(
+typed_dns_resolver_config:
+  name: envoy.network.dns_resolver.cares
+  typed_config:
+    "@type": type.googleapis.com/envoy.extensions.network.dns_resolver.cares.v3.CaresDnsResolverConfig
+    resolvers: *dns_resolvers
+    use_resolvers_as_fallback: *dns_use_resolvers_as_fallback
+)";
+
 // clang-format off
 const std::string config_header = R"(
 !ignore default_defs:
@@ -39,6 +48,8 @@ const std::string config_header = R"(
 - &dns_fail_max_interval 10s
 - &dns_query_timeout 25s
 - &dns_preresolve_hostnames []
+- &dns_resolvers [{"socket_address":{"address":"8.8.8.8"}}]
+- &dns_use_resolvers_as_fallback false
 - &enable_interface_binding false
 - &h2_connection_keepalive_idle_interval 100000s
 - &h2_connection_keepalive_timeout 10s
@@ -195,6 +206,8 @@ const char* config_template = R"(
         - endpoint:
             address:
               socket_address: { address: 127.0.0.1, port_value: 10101 }
+
+#{global_dns}
 
 static_resources:
   listeners:
